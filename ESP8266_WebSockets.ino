@@ -20,7 +20,6 @@ const char html_template[] PROGMEM = R"=====(
               var values = e.data.split(",");
               document.getElementById("sensor_value").innerHTML = values[0];
               document.getElementById("sensor_value2").innerHTML = values[1];
-              document.getElementById("sensor_value3").innerHTML = values[2];
             };
         };
       </script>
@@ -29,7 +28,6 @@ const char html_template[] PROGMEM = R"=====(
       <h1>Potentiometer Values</h1>
       <p id="sensor_value" style="font-size:50px;">0</p>
       <p id="sensor_value2" style="font-size:50px;">0</p>
-      <p id="sensor_value3" style="font-size:50px;">0</p>
    </body>
 </html>
 )=====";
@@ -66,9 +64,7 @@ void loop() {
   // Read two potentiometer values (if you have two connected)
   String value1 = String(analogRead(A0));
   String value2 = String(digitalRead(D3)); 
-  String value3 = String(digitalRead(D4));
-  // Add a second potentiometer on A1
-  String values = value1 + "," + value2 + "," + value3;
+  String values = value1 + "," + value2;
 
   // Broadcast both values to the client
   webSocket.broadcastTXT(values);
