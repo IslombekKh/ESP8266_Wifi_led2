@@ -40,15 +40,15 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 
 void setup() {
   Serial.begin(115200);
-  
-  // Connect to WiFi
-  WiFi.begin("IT_TAT", "tat12345");
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(100);
-  }
-  Serial.println("Connected to WiFi");
-  Serial.println(WiFi.localIP());
-  // Start WebSocket and HTTP servers
+
+  // Access Point rejimida ishlash
+  WiFi.softAP("Potentiometer_AP", "12345678"); // AP nomi va parol
+  IPAddress myIP = WiFi.softAPIP();
+  Serial.println("Access Point mode started");
+  Serial.print("AP IP address: ");
+  Serial.println(myIP);
+
+  // WebSocket va HTTP serverlarni ishga tushirish
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
   server.on("/", []() {
@@ -61,12 +61,12 @@ void loop() {
   webSocket.loop();
   server.handleClient();
 
-  // Read two potentiometer values (if you have two connected)
-  String value1 = String(analogRead(A0));
-  String value2 = String(digitalRead(D3)); 
+  // Ikkita potentiometr qiymatini o'qish (agar ulangan bo'lsa)
+  String value1 = String(analogRead(A0));   // 1-potentiometr
+  String value2 = String(digitalRead(D3));  // 2-potentiometr yoki boshqa sensor qiymati
   String values = value1 + "," + value2;
 
-  // Broadcast both values to the client
+  // Klientga qiymatlarni jo'natish
   webSocket.broadcastTXT(values);
   
   delay(100);
